@@ -6,6 +6,8 @@ A large-scale networking lab based on Jeremy’s IT Lab CCNA Mega Lab, covering 
 The lab combines multiple networking technologies into a single enterprise-style topology connecting two sites, **Office A** and **Office B**. The network includes a redundant Layer 3 core, distribution and access layers, an edge router, and dual WAN connections.
 
 The goal of the lab was to bring together the concepts covered throughout the CCNA course and practice configuring, verifying, and troubleshooting them in an integrated network environment.
+## Network Topology 
+![Network Topology](docs/network-topology.png)
 
 ## Key Technical Features
 
