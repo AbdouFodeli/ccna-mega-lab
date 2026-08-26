@@ -59,7 +59,7 @@ The output revealed the HSRP version mismatch between the two switches. After co
 
 ## Documentation & Files
 
-* [IP Addressing Plan](docs/ip-addressing-plan.md) — IPv4/IPv6 addressing, VLAN allocation, HSRP addresses, infrastructure links, and device management addresses.
+* [IP Addressing Plan](docs/ip-addressing-scheme.md) — IPv4/IPv6 addressing, VLAN allocation, HSRP addresses, infrastructure links, and device management addresses.
 * [Network Topology](docs/network-topology.png) — High-level topology diagram.
 * [Packet Tracer Lab File](lab-files/ccna-mega-lab.pka) — Complete Packet Tracer activity file.
 * [Device Configurations](configs/) — Final device configurations organized by network layer.
