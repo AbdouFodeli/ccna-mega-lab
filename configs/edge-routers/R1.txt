@@ -1,1 +1,145 @@
-
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname R1
+!
+enable secret 5 $1$mERr$QY/V97UA6E1L6VrsOqt76.
+!
+ip ssh version 2
+ip domain-name jeremyitlab.com
+ip name-server 10.5.0.4
+!
+username cisco secret 5 $1$mERr$Bok4KDfVutXOJolNq009M/
+!
+ip dhcp excluded-address 10.1.0.1 10.1.0.3
+ip dhcp excluded-address 10.2.0.1 10.2.0.3
+ip dhcp excluded-address 10.6.0.1 10.6.0.3
+ip dhcp excluded-address 10.3.0.1 10.3.0.3
+ip dhcp excluded-address 10.4.0.1 10.4.0.3
+ip dhcp excluded-address 10.5.0.1 10.5.0.4
+ip dhcp excluded-address 10.0.0.1 10.0.0.6
+ip dhcp excluded-address 10.0.0.17 10.0.0.22
+ip dhcp excluded-address 10.0.0.76
+!
+ip dhcp pool VLAN10_A
+ network 10.1.0.0 255.255.255.0
+ default-router 10.1.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool VLAN20_A
+ network 10.2.0.0 255.255.255.0
+ default-router 10.2.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool VLAN40_A
+ network 10.6.0.0 255.255.255.0
+ default-router 10.6.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool VLAN10_B
+ network 10.3.0.0 255.255.255.0
+ default-router 10.3.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool VLAN20_B
+ network 10.4.0.0 255.255.255.0
+ default-router 10.4.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool VLAN30_B
+ network 10.5.0.0 255.255.255.0
+ default-router 10.5.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool MANAGEMENT_A
+ network 10.0.0.0 255.255.255.240
+ default-router 10.0.0.1
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+ip dhcp pool MANAGEMENT_B
+ network 10.0.0.16 255.255.255.240
+ default-router 10.0.0.17
+ dns-server 10.5.0.4
+ domain-name jeremyitlab.com
+ option 150 ip 10.0.0.76
+!
+lldp run
+!
+interface Loopback0
+ ip address 10.0.0.76 255.255.255.255
+!
+interface GigabitEthernet0/0/0
+ ip address 10.0.0.38 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ ip address 10.0.0.34 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/2
+ ip address 203.0.113.1 255.255.255.252
+ ip nat outside
+ duplex auto
+ speed auto
+!
+router ospf 1
+ router-id 10.0.0.76
+ log-adjacency-changes
+ passive-interface default
+ no passive-interface GigabitEthernet0/0/0
+ no passive-interface GigabitEthernet0/0/1
+ network 10.0.0.0 0.255.255.255 area 0
+ default-information originate
+!
+ip nat inside source list NAT_ACL interface GigabitEthernet0/0/2 overload
+ip nat inside source static 10.5.0.4 203.0.113.3
+ip route 0.0.0.0 0.0.0.0 203.0.113.2
+!
+ip access-list standard NAT_ACL
+ permit 10.0.0.0 0.255.255.255
+access-list 1 permit 10.1.0.0 0.0.0.255
+!
+no cdp run
+snmp-server community SNMPSTRING RO
+!
+logging trap debugging
+logging 10.5.0.4
+!
+line con 0
+ exec-timeout 30 0
+ login local
+!
+line vty 0 15
+ access-class 1 in
+ logging synchronous
+ login local
+ transport input ssh
+!
+ntp master 1
+ntp authenticate
+ntp authentication-key 1 md5 08224F4008 7
+ntp trusted-key 1
+!
+end
